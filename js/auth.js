@@ -27,6 +27,11 @@ async function logout() {
 
         // HTTP 상태 코드가 200이 아니거나, API 성공 여부가 실패인 경우 
         if(!response.ok) {
+            // 토큰 리프레시 기능이 연동 계획에서 제외되어
+            // 현재 액세스 토큰 만료 시 재발급을 위해서는 재로그인을 해야하는 상황으로
+            // 임시로 로그아웃 실패 시에도 스토리지 내 토큰을 비워 재로그인 가능하게 수정
+            localStorage.removeItem("accessToken");
+            location.replace("login.html");
             throw new Error("로그아웃에 실패했습니다.");
         }
         // 로컬스토리지 내 토큰 제거 
