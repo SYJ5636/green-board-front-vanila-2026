@@ -12,7 +12,8 @@ async function login(event) {
     try{
         // ajax, fetch 통신용 라이브러리 
         const response = await fetch("http://127.0.0.1:8080/api/user/login", {
-            method: "POST", headers: {"Content-Type": "application/json"},
+            method: "POST", 
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username, password})
         });
 
