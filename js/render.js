@@ -27,7 +27,7 @@ function renderPosts (posts){
 // 글 상세 페이지 만드는 함수
 function renderPost(post){
     document.querySelector("#post-title").textContent = post.title;
-    document.querySelector("#post-meta").textContent = `${post.author} | ${post.createdDatetime}`;
+    document.querySelector("#post-meta").textContent = `${post.authorNickname} | ${post.createdDatetime}`;
     document.querySelector("#post-content").textContent = post.content;
 }
 
