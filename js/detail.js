@@ -3,16 +3,21 @@ const postId = Number(params.get("id")); // 숫자 강제 형변환
 
 // posts 배열에서 사용자가 누른 게시글 찾기
 async function loadPost() {
+    const message = document.querySelector("#post-message")
+    message.textContent = "게시글을 불러오는 중."
+    const reloadButton = document.querySelector("#retry-post");
     try {
         // 게시글 상세 조회 API 호출
         const post = await apiRequest(`/board/${postId}`);
         renderPost(post);
-        document.querySelector("#post-message").textContent = "";
+        message.textContent = "";
+        reloadButton.hidden = true;
         return true;
     } catch (error){
         document.querySelector("#post-title").textContent = "게시글 조회 실패";
         document.querySelector("#post-content").textContent = "";
-        document.querySelector("#post-message").textContent = error.message;
+        message.textContent = error.message;
+        reloadButton.hidden = false;
         return false;
     }
 }
@@ -78,3 +83,15 @@ document.querySelector("#comment-form").addEventListener("submit", async functio
         message.textContent = error.message;
     }
 })
+
+document.querySelector("#retry-post").addEventListener("click", () => {
+    // 재로등 방법 1. 게시글 불러오는 함수 재호출
+    loadPost();
+
+    // 재로드 방법 2. 페이지 새로고침
+    // location.reload();
+})
+
+// 화살표 함수
+// 익명 함수
+// 함수 표현식과 함수 선언식의 차이

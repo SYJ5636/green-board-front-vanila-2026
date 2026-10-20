@@ -18,7 +18,11 @@ function requireLogin() {
 document.querySelector(".logout-button").addEventListener("click", logout);
 
 async function logout() {
-    // 서버에 토큰이 무효화 되었다를 알려줘야함 먼저
+    const button = document.querySelector(".logout-button");
+    if(button.disabled) {
+        return;
+    }
+    button.disabled = true;
     try {
         const accessToken = localStorage.getItem("accessToken");
         await apiRequest("/user/logout", "POST", {accessToken});
@@ -29,6 +33,8 @@ async function logout() {
         location.replace("login.html");
     } catch (error) {
         alert(error.message);
+    } finally {
+        button.disabled = false;
     }
 }
 
