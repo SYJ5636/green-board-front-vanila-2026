@@ -8,17 +8,40 @@ async function loadPost() {
         const post = await apiRequest(`/board/${postId}`);
         renderPost(post);
         document.querySelector("#post-message").textContent = "";
+        return true;
     } catch (error){
         document.querySelector("#post-title").textContent = "게시글 조회 실패";
         document.querySelector("#post-content").textContent = "";
         document.querySelector("#post-message").textContent = error.message;
+        return false;
     }
 }
-document.querySelector("#comments-section").hidden = true;
+
+async function loadcomments() {
+    try {
+        const comments = await apiRequest(`/board/${postId}/comment`);
+        renderComments(comments)
+    } catch (error) {
+        document.querySelector("#comment-message").textContent = error.message;
+    }
+}
+
 
 if(requireLogin()) {
     if(Number.isSafeInteger(postId) && postId > 0){
-        loadPost();
+        // 비동기 작업을 위한 방법
+        // 1. asnyc / await
+        // 2. Promise -> then() / catch ()
+        // 1번과 2번은 결과적으로 결과는 동일하다
+
+        // 게시글 상세 정보 조회
+        loadPost().then(function(success){
+            if (success) {
+                // 댓글 영역 표시
+                loadcomments();
+            }
+        });
+        
 
         // 지금 postId에 해당하는 댓글만 출력하도록 필터링
         // let filteredComments = comments.filter(comment => comment.boardId === postId);
@@ -32,8 +55,8 @@ if(requireLogin()) {
 
 
 // 댓글 작성 폼 submit 시 댓글 추가
-// document.querySelector("#comment-form").addEventListener("submit", function (event) {
-//     event.preventDefault();
+document.querySelector("#comment-form").addEventListener("submit", function (event) {
+    event.preventDefault();
 //     const content = document.querySelector("#comment-content").value.trim();
     
 //     // 현재 페이지에 해당하는 게시글이 없거나
@@ -56,4 +79,4 @@ if(requireLogin()) {
 //     // 댓글을 저장했으면 해당 input을 지워주는 역할
 //     document.querySelector("#comment-content").value="";
 //     renderComments(comments.filter(comment => comment.boardId === postId));
-// })
+})
